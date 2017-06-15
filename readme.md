@@ -6,6 +6,7 @@
 First create a file for database connection settings (substitute `localhost/database`, `dbuser`, and `dbpass` on the last 3 lines as necessary).  
 ```
 $ cat << EOF > src/main/resources/application.properties
+spring.jpa.hibernate.ddl-auto=update
 spring.datasource.driver-class-name=com.mysql.jdbc.Driver
 spring.datasource.url=jdbc:mysql://localhost/database
 spring.datasource.username=dbuser
