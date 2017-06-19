@@ -28,7 +28,7 @@ For distribution:
 ```
 $ java -jar /build/libs/gs-rest-service0.1.0.jar
 ```
-## Test
+## Usage
 With the tomcat server running on port 8080 (default), `curl` the `/users` path with HTTP verbs `GET` or `POST`
 ### List users
 ```
@@ -56,4 +56,22 @@ $ curl -X POST -H "Content-Type: application/json" -d '{"email":"jake@gmailer.co
   "email": "jake@gmailer.com"
 }
 ```
-
+## Development
+Create an application-test.properties file with the connection details to a test database.  
+```
+$ cat << EOF > src/main/java/resources/application-test.properties
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost/testdb
+spring.datasource.username=testuser
+spring.datasource.password=testuserpassword
+EOF
+```
+Then run the automated tests.  
+```
+$ gradle test
+```
+Open the output file for more details of the run.
+```
+$ open build/reports/tests/test/index.html
+```
