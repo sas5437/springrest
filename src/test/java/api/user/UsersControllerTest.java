@@ -1,6 +1,7 @@
-package api;
+package api.user;
 
 import api.user.UsersRestUriConstants;
+import api.Application;
 
 import org.junit.Test;
 import org.junit.Before;
@@ -17,7 +18,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.context.*;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @TestPropertySource(locations="classpath:application-test.properties")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ApplicationTest {
+public class UsersControllerTest {
 
   @Autowired
   private WebApplicationContext wac;

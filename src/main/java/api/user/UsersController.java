@@ -17,11 +17,14 @@ import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 
 import api.user.User;
 import api.user.UserRepository;
+import api.user.NullEmailException;
+import api.user.EmptyEmailException;
+import api.user.InvalidEmailException;
 
 @Controller
 public class UsersController {
-	@Autowired
 
+	@Autowired
 	private UserRepository userRepository;
 
 	@GetMapping(path=UsersRestUriConstants.INDEX)
@@ -31,15 +34,12 @@ public class UsersController {
 
 	@GetMapping(path=UsersRestUriConstants.READ)
 	public @ResponseBody User read(@RequestParam("id") Long id) {
-		// if(null == id) {
-		// 	throw NotFoundException("ID must be given in order to fetch a user.");
-		// }
-
 		return userRepository.findOne(id);
 	}
 
 	@PostMapping(path=UsersRestUriConstants.CREATE)
-	public @ResponseBody ResponseEntity<User> create(@RequestBody String requestString) {
+	public @ResponseBody ResponseEntity<User> create(@RequestBody String requestString)
+	 	throws NullEmailException, EmptyEmailException, InvalidEmailException {
 		String email = Json.parse(requestString).asObject().get("email").asString();
 		User user = new User();
 		user.setEmail(email);
@@ -49,13 +49,29 @@ public class UsersController {
 
 	@ExceptionHandler(org.hibernate.exception.ConstraintViolationException.class)
 	public @ResponseBody ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex){
-		String body = "{\"error\":\"Duplicate entry on attribute " + ex.getConstraintName() + "\"}";
-		return new ResponseEntity<String>(body, HttpStatus.OK);
+		String body = generateErrorMessage("Duplicate entry on attribute " + ex.getConstraintName());
+		return new ResponseEntity<String>(body, HttpStatus.BAD_REQUEST);
 	}
 
-	// @ExceptionHandler(NotFoundException.class)
-	// public @ResponseBody ResponseEntity<String> handleNotFoundException(NotFoundException ex){
-	// 	String body = "{\"error\":\"" + ex.getMessage() + "\"}";
-	// 	return new ResponseEntity<String>(body, HttpStatus.NOT_FOUND);
-	// }
+	@ExceptionHandler(NullEmailException.class)
+	public @ResponseBody ResponseEntity<String> handleNullEmailException(NullEmailException ex) {
+		String body = generateErrorMessage("Email cannot be null");
+		return new ResponseEntity<String>(body, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(EmptyEmailException.class)
+	public @ResponseBody ResponseEntity<String> handleEmptyEmailException(NullEmailException ex) {
+		String body = generateErrorMessage("Email cannot be empty");
+		return new ResponseEntity<String>(body, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(InvalidEmailException.class)
+	public @ResponseBody ResponseEntity<String> handleInvalidEmailException(NullEmailException ex) {
+		String body = generateErrorMessage("Email is invalid");
+		return new ResponseEntity<String>(body, HttpStatus.BAD_REQUEST);
+	}
+
+	private String generateErrorMessage(String message) {
+		return "{\"error\":\"" + message + "\"}";
+	}
 }
