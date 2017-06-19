@@ -1,7 +1,7 @@
-package api;
+package api.user;
 
 import org.springframework.data.repository.CrudRepository;
-import api.User;
+import api.user.User;
 
 // This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
 // CRUD refers Create, Read, Update, Delete
@@ -9,4 +9,3 @@ import api.User;
 public interface UserRepository extends CrudRepository<User, Long> {
 
 }
-

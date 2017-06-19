@@ -1,4 +1,4 @@
-package api;
+package api.user;
 
 import com.eclipsesource.json.Json;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +15,30 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 
-import api.User;
-import api.UserRepository;
+import api.user.User;
+import api.user.UserRepository;
 
 @Controller
-@RequestMapping(path="/users")
 public class UsersController {
 	@Autowired
-  
+
 	private UserRepository userRepository;
-	
-	@PostMapping
+
+	@GetMapping(path=UsersRestUriConstants.INDEX)
+	public @ResponseBody Iterable<User> index() {
+		return userRepository.findAll();
+	}
+
+	@GetMapping(path=UsersRestUriConstants.READ)
+	public @ResponseBody User read(@RequestParam("id") Long id) {
+		// if(null == id) {
+		// 	throw NotFoundException("ID must be given in order to fetch a user.");
+		// }
+
+		return userRepository.findOne(id);
+	}
+
+	@PostMapping(path=UsersRestUriConstants.CREATE)
 	public @ResponseBody ResponseEntity<User> create(@RequestBody String requestString) {
 		String email = Json.parse(requestString).asObject().get("email").asString();
 		User user = new User();
@@ -34,14 +47,15 @@ public class UsersController {
 		return new ResponseEntity<User>(user, HttpStatus.CREATED);
 	}
 
-	@GetMapping
-	public @ResponseBody Iterable<User> index() {
-		return userRepository.findAll();
-	}
-
 	@ExceptionHandler(org.hibernate.exception.ConstraintViolationException.class)
 	public @ResponseBody ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex){
 		String body = "{\"error\":\"Duplicate entry on attribute " + ex.getConstraintName() + "\"}";
 		return new ResponseEntity<String>(body, HttpStatus.OK);
 	}
+
+	// @ExceptionHandler(NotFoundException.class)
+	// public @ResponseBody ResponseEntity<String> handleNotFoundException(NotFoundException ex){
+	// 	String body = "{\"error\":\"" + ex.getMessage() + "\"}";
+	// 	return new ResponseEntity<String>(body, HttpStatus.NOT_FOUND);
+	// }
 }

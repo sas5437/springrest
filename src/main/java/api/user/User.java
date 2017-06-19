@@ -1,4 +1,4 @@
-package api;
+package api.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.Entity;
@@ -15,7 +15,7 @@ public class User {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@JsonProperty
 	private Integer id;
-	
+
 	@Column(unique = true)
 	@JsonProperty
 	private String email;
