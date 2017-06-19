@@ -53,21 +53,9 @@ public class UsersController {
 		return new ResponseEntity<String>(body, HttpStatus.BAD_REQUEST);
 	}
 
-	@ExceptionHandler(NullEmailException.class)
+	@ExceptionHandler({NullEmailException.class, EmptyEmailException.class, InvalidEmailException.class})
 	public @ResponseBody ResponseEntity<String> handleNullEmailException(NullEmailException ex) {
-		String body = generateErrorMessage("Email cannot be null");
-		return new ResponseEntity<String>(body, HttpStatus.BAD_REQUEST);
-	}
-
-	@ExceptionHandler(EmptyEmailException.class)
-	public @ResponseBody ResponseEntity<String> handleEmptyEmailException(NullEmailException ex) {
-		String body = generateErrorMessage("Email cannot be empty");
-		return new ResponseEntity<String>(body, HttpStatus.BAD_REQUEST);
-	}
-
-	@ExceptionHandler(InvalidEmailException.class)
-	public @ResponseBody ResponseEntity<String> handleInvalidEmailException(NullEmailException ex) {
-		String body = generateErrorMessage("Email is invalid");
+		String body = generateErrorMessage(ex.getMessage());
 		return new ResponseEntity<String>(body, HttpStatus.BAD_REQUEST);
 	}
 
