@@ -17,9 +17,10 @@ import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 
 import api.user.User;
 import api.user.UserRepository;
-import api.user.NullEmailException;
-import api.user.EmptyEmailException;
-import api.user.InvalidEmailException;
+import api.common.exceptions.NullAttributeException;
+import api.common.exceptions.BlankAttributeException;
+import api.common.exceptions.InvalidAttributeException;
+import api.common.exceptions.AttributeException;
 
 @Controller
 public class UsersController {
@@ -39,7 +40,7 @@ public class UsersController {
 
 	@PostMapping(path=UsersRestUriConstants.CREATE)
 	public @ResponseBody ResponseEntity<User> create(@RequestBody String requestString)
-	 	throws NullEmailException, EmptyEmailException, InvalidEmailException {
+	 	throws NullAttributeException, BlankAttributeException, InvalidAttributeException {
 		String email = Json.parse(requestString).asObject().get("email").asString();
 		User user = new User();
 		user.setEmail(email);
@@ -53,8 +54,8 @@ public class UsersController {
 		return new ResponseEntity<String>(body, HttpStatus.BAD_REQUEST);
 	}
 
-	@ExceptionHandler({NullEmailException.class, EmptyEmailException.class, InvalidEmailException.class})
-	public @ResponseBody ResponseEntity<String> handleNullEmailException(NullEmailException ex) {
+	@ExceptionHandler({NullAttributeException.class, BlankAttributeException.class, InvalidAttributeException.class})
+	public @ResponseBody ResponseEntity<String> handleNullAttributeException(AttributeException ex) {
 		String body = generateErrorMessage(ex.getMessage());
 		return new ResponseEntity<String>(body, HttpStatus.BAD_REQUEST);
 	}

@@ -2,8 +2,9 @@ package api.user;
 
 import api.user.User;
 import api.user.UserRepository;
-import api.user.NullEmailException;
-import api.user.EmptyEmailException;
+import api.common.exceptions.NullAttributeException;
+import api.common.exceptions.BlankAttributeException;
+import api.common.exceptions.InvalidAttributeException;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class UserTest {
 
   @Test
   public void emailCanBeValid()
-    throws NullEmailException, EmptyEmailException, InvalidEmailException {
+    throws NullAttributeException, BlankAttributeException, InvalidAttributeException {
     user = new User();
     String email = "test+email@gmail.com";
     assertNull(user.getEmail());
@@ -32,33 +33,33 @@ public class UserTest {
     assertEquals(user.getEmail(), email);
   }
 
-  @Test(expected=NullEmailException.class)
+  @Test(expected=NullAttributeException.class)
   public void emailCannotBeNull()
-    throws NullEmailException, EmptyEmailException, InvalidEmailException {
+    throws NullAttributeException, BlankAttributeException, InvalidAttributeException {
     user = new User();
     user.setEmail(null);
   }
 
-  @Test(expected=EmptyEmailException.class)
+  @Test(expected=BlankAttributeException.class)
   public void emailCannotBeEmpty()
-    throws NullEmailException, EmptyEmailException, InvalidEmailException {
+    throws NullAttributeException, BlankAttributeException, InvalidAttributeException {
     user = new User();
     assertNull(user.getEmail());
     user.setEmail("");
     assertEquals(user.getEmail(), "");
   }
 
-  @Test(expected=InvalidEmailException.class)
+  @Test(expected=InvalidAttributeException.class)
   public void emailCannotBeInvalidCaseOne()
-    throws NullEmailException, EmptyEmailException, InvalidEmailException {
+    throws NullAttributeException, BlankAttributeException, InvalidAttributeException {
     user = new User();
     assertNull(user.getEmail());
     user.setEmail("invalid@email.com@gmail.com");
   }
 
-  @Test(expected=InvalidEmailException.class)
+  @Test(expected=InvalidAttributeException.class)
   public void emailCannotBeInvalidCaseTwo()
-    throws NullEmailException, EmptyEmailException, InvalidEmailException {
+    throws NullAttributeException, BlankAttributeException, InvalidAttributeException {
     user = new User();
     assertNull(user.getEmail());
     user.setEmail("invalidemailatgmaildotcom");

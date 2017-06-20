@@ -31,7 +31,7 @@ dependencies {
     compile("mysql:mysql-connector-java")
 		compile("com.eclipsesource.minimal-json:minimal-json:0.9.4")
 		compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.8'
-
+		compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.8.2'
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
