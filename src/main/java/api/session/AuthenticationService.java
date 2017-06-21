@@ -4,13 +4,13 @@ import api.session.Session;
 import api.session.SessionRepository;
 import api.user.User;
 import api.user.UserRepository;
-import api.common.exceptions.AuthorizationException;
+import api.common.exceptions.AuthenticationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AuthorizationService {
+public class AuthenticationService {
 
 	private static final Pattern pattern = Pattern.compile(User.PASSWORD_REGEX);
 
@@ -22,18 +22,18 @@ public class AuthorizationService {
 	private String email;
 	private String password;
 
-	public AuthorizationService(String email, String password) {
+	public AuthenticationService(String email, String password) {
 		this.email = email;
 		this.password = password;
 	}
 
-	public Session authenticate() throws AuthorizationException {
+	public Session authenticate() throws AuthenticationException {
 		validatePassword(password);
 		try {
 			user = userRepository.findByEmail(email);
 			return createSession(user);
 		} catch (Exception ex) { 
-			throw new AuthorizationException();
+			throw new AuthenticationException();
 		}
 	}
 
@@ -48,7 +48,7 @@ public class AuthorizationService {
 	private void validatePassword(String password) {
 		matcher = pattern.matcher(password);
 		if (!matcher.find()) {
-			throw new AuthorizationException();
+			throw new AuthenticationException();
 		}
 	}
 }

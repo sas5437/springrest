@@ -18,22 +18,22 @@ import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import api.user.User;
 import api.session.Session;
 import api.session.SessionsRestUriConstants;
-import api.common.exceptions.AuthorizationException;
+import api.common.exceptions.AuthenticationException;
 
 @Controller
 public class SessionsController {
 
 	@PostMapping(path=SessionsRestUriConstants.CREATE)
 	public @ResponseBody ResponseEntity<Session> create(@RequestBody String requestString)
-	 	throws AuthorizationException {
+	 	throws AuthenticationException {
 		String email = Json.parse(requestString).asObject().get("email").asString();
 		String password = Json.parse(requestString).asObject().get("password").asString();
-		AuthorizationService authService = new AuthorizationService(email, password);
+		AuthenticationService authService = new AuthenticationService(email, password);
 		return new ResponseEntity<Session>(authService.authenticate(), HttpStatus.CREATED);
 	}
 
-	@ExceptionHandler(AuthorizationException.class)
-	public @ResponseBody ResponseEntity<String> handleNullAttributeException(AuthorizationException ex) {
+	@ExceptionHandler(AuthenticationException.class)
+	public @ResponseBody ResponseEntity<String> handleNullAttributeException(AuthenticationException ex) {
 		String body = generateErrorMessage("Unauthorized");
 		return new ResponseEntity<String>(body, HttpStatus.UNAUTHORIZED);
 	}
