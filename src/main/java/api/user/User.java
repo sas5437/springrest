@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -24,8 +25,14 @@ import org.hibernate.validator.constraints.NotBlank;
 @Table(name = "users")
 public class User {
 
+	public static final String EMAIL_REGEX = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
+	public static final String PASSWORD_REGEX = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@*#-$]){8,20}$";
+
 	private static final Pattern VALID_EMAIL_REGEX = Pattern.compile(
-		"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+		EMAIL_REGEX, Pattern.CASE_INSENSITIVE);
+
+	private static final Pattern VALID_PASSWORD_REGEX = Pattern.compile(
+		"^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@*#-$]){8,20}$");
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -40,6 +47,9 @@ public class User {
 	@Column(unique = true)
 	@JsonIgnore
 	private String password;
+
+	@Transient
+	private Matcher matcher;
 
   public Integer getId(){
 		return id;
@@ -79,12 +89,12 @@ public class User {
 	}
 
 	private boolean isValidEmail(String email) {
-		Matcher matcher = VALID_EMAIL_REGEX.matcher(email);
+		matcher = VALID_EMAIL_REGEX.matcher(email);
     return matcher.find();
 	}
 
 	private boolean isValidPassword(String aPassword) {
-		// TODO: implement password validator
-		return true;
+		matcher = VALID_PASSWORD_REGEX.matcher(password);
+		return matcher.find();
 	}
 }
