@@ -23,22 +23,22 @@ import api.common.exceptions.AuthenticationException;
 @Controller
 public class SessionsController {
 
-	@PostMapping(path=SessionsRestUriConstants.CREATE)
-	public @ResponseBody ResponseEntity<Session> create(@RequestBody String requestString)
-	 	throws AuthenticationException {
-		String email = Json.parse(requestString).asObject().get("email").asString();
-		String password = Json.parse(requestString).asObject().get("password").asString();
-		AuthenticationService authService = new AuthenticationService(email, password);
-		return new ResponseEntity<Session>(authService.authenticate(), HttpStatus.CREATED);
-	}
+  @PostMapping(path=SessionsRestUriConstants.CREATE)
+  public @ResponseBody ResponseEntity<Session> create(@RequestBody String requestString)
+     throws AuthenticationException {
+    String email = Json.parse(requestString).asObject().get("email").asString();
+    String password = Json.parse(requestString).asObject().get("password").asString();
+    AuthenticationService authService = new AuthenticationService(email, password);
+    return new ResponseEntity<Session>(authService.authenticate(), HttpStatus.CREATED);
+  }
 
-	@ExceptionHandler(AuthenticationException.class)
-	public @ResponseBody ResponseEntity<String> handleNullAttributeException(AuthenticationException ex) {
-		String body = generateErrorMessage("Unauthorized");
-		return new ResponseEntity<String>(body, HttpStatus.UNAUTHORIZED);
-	}
+  @ExceptionHandler(AuthenticationException.class)
+  public @ResponseBody ResponseEntity<String> handleNullAttributeException(AuthenticationException ex) {
+    String body = generateErrorMessage("Unable to authorize your request.");
+    return new ResponseEntity<String>(body, HttpStatus.UNAUTHORIZED);
+  }
 
-	private String generateErrorMessage(String message) {
-		return "{\"error\":\"" + message + "\"}";
-	}
+  private String generateErrorMessage(String message) {
+    return "{\"error\":\"" + message + "\"}";
+  }
 }

@@ -21,38 +21,38 @@ import java.util.Date;
 @Table(name = "sessions")
 public class Session {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@JsonIgnore
-	private Integer id;
+  @Id
+  @GeneratedValue(strategy=GenerationType.AUTO)
+  @JsonIgnore
+  private Integer id;
 
-	@Column(unique = true)
-	@NotNull @NotBlank
-	@JsonProperty
-	private String token;
+  @Column(unique = true)
+  @NotNull @NotBlank
+  @JsonProperty
+  private String token;
 
-	@NotNull @NotBlank
-	@JsonProperty
-	private Date expiresAt;
+  @NotNull @NotBlank
+  @JsonProperty
+  private Date expiresAt;
 
-	@OneToOne
-	@JsonIgnore
-	private User user;
+  @OneToOne
+  @JsonIgnore
+  private User user;
 
-	@Transient
-	Date date;
+  @Transient
+  Date date;
 
-	public String getToken(){
-		return token;
-	}
+  public String getToken(){
+    return token;
+  }
 
-	public void generateToken(){
-		this.token = UUID.randomUUID().toString();
-		this.date = new Date();
-		this.expiresAt = new Date(date.getTime() + 300000); // 5 minutes from token generation
-	}
+  public void generateToken(){
+    this.token = UUID.randomUUID().toString();
+    this.date = new Date();
+    this.expiresAt = new Date(date.getTime() + 300000); // 5 minutes from token generation
+  }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+  public void setUser(User user) {
+    this.user = user;
+  }
 }

@@ -16,19 +16,19 @@ public class SessionTest {
   @Autowired
   Session session;
 
-	private static final String UUID_PATTERN = "^[a-zA-Z0-9 -]{30,40}$";
+  private static final String UUID_PATTERN = "^[a-zA-Z0-9 -]{30,40}$";
 
   @Test
   public void init() {
-		session = new Session();
-		assertNull(session.getToken());
+    session = new Session();
+    assertNull(session.getToken());
   }
 
-	@Test
-	public void generateTokenOk() {
-		session = new Session();
-		session.generateToken();
-		assertNotNull(session.getToken());
-		assertTrue(Pattern.matches(UUID_PATTERN, session.getToken()));
-	}
+  @Test
+  public void generateTokenOk() {
+    session = new Session();
+    session.generateToken();
+    assertNotNull(session.getToken());
+    assertTrue(Pattern.matches(UUID_PATTERN, session.getToken()));
+  }
 }
